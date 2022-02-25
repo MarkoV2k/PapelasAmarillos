@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     public bool doubleJump = true;
 
-    public Animator animator;
+    //public Animator animator;
     public Transform model;
 
     void Start()
@@ -30,10 +30,10 @@ public class PlayerController : MonoBehaviour
 
         direction.x = hInput * speed;
 
-        animator.SetFloat("speed", Mathf.Abs(hInput));
+        //animator.SetFloat("speed", Mathf.Abs(hInput));
 
         bool isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundLayer);
-        animator.SetBool("isGrounded", isGrounded);
+       // animator.SetBool("isGrounded", isGrounded);
 
 
         if (isGrounded)
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
 
             if (doubleJump & Input.GetButtonDown("Jump"))
             {
-                animator.SetTrigger("doubleJump");
+                //animator.SetTrigger("doubleJump");
                 direction.y = jumpForce;
                 doubleJump = false;
             }
