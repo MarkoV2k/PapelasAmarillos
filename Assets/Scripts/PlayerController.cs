@@ -53,9 +53,10 @@ public class PlayerController : MonoBehaviour
 
             if (doubleJump & Input.GetButtonDown("Jump"))
             {
-                //animator.SetTrigger("doubleJump");
+                
                 direction.y = jumpForce;
                 doubleJump = false;
+                animator.SetTrigger("doubleJump");
             }
         }
 
