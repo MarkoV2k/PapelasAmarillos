@@ -6,9 +6,11 @@ public class PlayerController : MonoBehaviour
 {
     public CharacterController controller;
     private Vector3 direction;
+    private Vector3 sizeOfPlayer;
     public float speed = 8;
     public float jumpForce = 10;
-    public float gravity = -20;
+    private float gravity = -20;
+    private float gravityOnWall = -5;
 
     public Transform wallCheck;
     public Transform wallCheckBack;
@@ -38,10 +40,10 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isGrounded", isGrounded);
 
         bool onWall = Physics.CheckSphere(wallCheck.position, 0.05f, groundLayer);
-        //animator.SetBool("OnWall", onWall);
+        animator.SetBool("onWall", onWall);
 
         bool onWallBack = Physics.CheckSphere(wallCheckBack.position, 0.05f, groundLayer);
-        //animator.SetBool("OnWallBack", onWallBack);
+        animator.SetBool("onWall", onWallBack);
 
 
         // STARA WERSJA BEZ SKAKANIA PO ŒCIANACH ALE DZIA£A 100%
@@ -85,12 +87,15 @@ public class PlayerController : MonoBehaviour
             if (onWall || onWallBack)
             {
                 doubleJump = true;
-                direction.y += gravity * Time.deltaTime;
+                direction.y += gravityOnWall * Time.deltaTime;
+                animator.SetBool("onWall", onWall);
+                animator.SetBool("onWall", onWallBack);
 
                 if (doubleJump & Input.GetButtonDown("Jump"))
                 {
                     animator.SetTrigger("doubleJump");
-                    direction.y = jumpForce;
+                    animator.SetTrigger("climb");
+                    direction.y = 5;
                     doubleJump = false;
                 }
 
@@ -102,9 +107,49 @@ public class PlayerController : MonoBehaviour
                 if (doubleJump & Input.GetButtonDown("Jump"))
                 {
                     animator.SetTrigger("doubleJump");
+                    //animator.SetTrigger("jumpFromWall");
                     direction.y = jumpForce;
                     doubleJump = false;
                 }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+
+            sizeOfPlayer = transform.localScale;
+            if (sizeOfPlayer.x < 9.5f)
+            {
+                if (gravity > -29)
+                    gravity += -1;
+                if (speed < 12.5f)
+                    speed += 0.5f;
+                if (jumpForce > 8.2f)
+                    jumpForce += -0.2f;
+
+                sizeOfPlayer.y += 1f;
+                sizeOfPlayer.x += 1f;
+                sizeOfPlayer.z += 1f;
+                transform.localScale = sizeOfPlayer;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            sizeOfPlayer = transform.localScale;
+            if (sizeOfPlayer.x > 1f)
+            {
+                if (gravity < -20)
+                    gravity += 1;
+                if (speed < 8)
+                    speed += -0.5f;
+                if (jumpForce < 10)
+                    jumpForce += 0.2f;
+
+                sizeOfPlayer.y += -1f;
+                sizeOfPlayer.x += -1f;
+                sizeOfPlayer.z += -1f;
+
+                transform.localScale = sizeOfPlayer;
             }
         }
 
