@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 10;
     public float gravity = -20;
 
+    public Transform wallCheck;
+    public Transform wallCheckBack;
     public Transform groundCheck;
     public LayerMask groundLayer;
 
@@ -35,8 +37,15 @@ public class PlayerController : MonoBehaviour
         bool isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundLayer);
         animator.SetBool("isGrounded", isGrounded);
 
+        bool onWall = Physics.CheckSphere(wallCheck.position, 0.05f, groundLayer);
+        //animator.SetBool("OnWall", onWall);
 
-        if (isGrounded)
+        bool onWallBack = Physics.CheckSphere(wallCheckBack.position, 0.05f, groundLayer);
+        //animator.SetBool("OnWallBack", onWallBack);
+
+
+        // STARA WERSJA BEZ SKAKANIA PO ŒCIANACH ALE DZIA£A 100%
+        /*if (isGrounded)
         {
             direction.y = 0;
 
@@ -58,9 +67,48 @@ public class PlayerController : MonoBehaviour
                 doubleJump = false;
                 animator.SetTrigger("doubleJump");
             }
+        }*/
+
+        if (isGrounded)
+        {
+            direction.y = 0;
+
+            doubleJump = true;
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                direction.y = jumpForce;
+            }
+        }
+        else
+        {
+            if (onWall || onWallBack)
+            {
+                doubleJump = true;
+                direction.y += gravity * Time.deltaTime;
+
+                if (doubleJump & Input.GetButtonDown("Jump"))
+                {
+                    animator.SetTrigger("doubleJump");
+                    direction.y = jumpForce;
+                    doubleJump = false;
+                }
+
+            }
+            else
+            {
+                direction.y += gravity * Time.deltaTime;
+
+                if (doubleJump & Input.GetButtonDown("Jump"))
+                {
+                    animator.SetTrigger("doubleJump");
+                    direction.y = jumpForce;
+                    doubleJump = false;
+                }
+            }
         }
 
-        if(hInput != 0)
+        if (hInput != 0)
         {
             Quaternion newRotation = Quaternion.LookRotation(new Vector3(hInput, 0, 0));
             model.rotation = newRotation;

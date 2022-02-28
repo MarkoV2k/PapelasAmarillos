@@ -87,7 +87,7 @@ public class PlayerControllerV2 : MonoBehaviour
                     doubleJump = false;
                 }
             }
-
+        }
 
 
             if (hInput != 0)
@@ -139,4 +139,4 @@ public class PlayerControllerV2 : MonoBehaviour
             controller.Move(direction * Time.deltaTime);
         }
     }
-}
+
